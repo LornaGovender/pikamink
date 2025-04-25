@@ -192,7 +192,7 @@
 </head>
 <body>
   <header>
-    <img src="pikamink_only_transparent.PNG" alt="Pikamink Logo" class="logo">
+    <img src="pikamink_only_transparent.png" alt="Pikamink Logo" class="logo">
     <h1>Welcome to Pikamink Studios</h1>
     <p>Explore magical games and glowing mushrooms!</p>
   </header>
@@ -282,7 +282,7 @@
       if (event.target === offerModal) offerModal.style.display = "none";
       if (event.target === contactModal) contactModal.style.display = "none";
     };
-    
+
     // Game logic (same as before)
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d");
@@ -293,7 +293,7 @@
     let dy = 0;
     let mushroom = { x: 320, y: 320 };
     let mushroomImg = new Image();
-    mushroomImg.src = "pikamink_only_transparent.PNG";
+    mushroomImg.src = "pikamink_only_transparent.png";
 
     function getRandomPosition() {
       return Math.floor(Math.random() * 20) * grid;
@@ -341,12 +341,36 @@
       else if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = grid; }
     });
 
-    mushroomImg.onload = () => {
-      // 🐌 Slow down the game: run update every 150ms
-      setInterval(updateGame, 150);
-    };
-  </script>
+    // Touch control for mobile devices
+    let touchStartX = 0;
+    let touchStartY = 0;
 
+    canvas.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0 && dx === 0) { dx = grid; dy = 0; }
+        else if (deltaX < 0 && dx === 0) { dx = -grid; dy = 0; }
+      } else {
+        if (deltaY > 0 && dy === 0) { dx = 0; dy = grid; }
+        else if (deltaY < 0 && dy === 0) { dx = 0; dy = -grid; }
+      }
+
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    });
+
+    setInterval(updateGame, 100);
+  </script>
 </body>
 </html>
+
 
