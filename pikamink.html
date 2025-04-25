@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pikamink</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Comic Sans MS', cursive;
+      background: linear-gradient(to right, #ff69b4, #ffa500, #c77dff);
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .hero {
+      padding: 40px;
+    }
+
+    .mascot {
+      width: 200px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px white;
+      margin: 20px 0;
+    }
+
+    button {
+      background-color: white;
+      color: #ff69b4;
+      border: none;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #ffd1dc;
+    }
+
+    .about {
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    footer {
+      padding: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pikamink</h1>
+    <p>Whimsical game design & branding studio</p>
+  </header>
+
+  <section class="hero">
+    <img src="pikamink_only_transparent.png" alt="Pikamink Mascot" class="mascot" />
+    <h2>Game Design ✨ Cute Branding 🍄 Digital Magic</h2>
+    <button onclick="showMessage()">Get in Touch</button>
+  </section>
+
+  <section class="about">
+    <h3>About Us</h3>
+    <p>Pikamink brings fantasy to life through adorable game assets, digital art, and magical branding.</p>
+  </section>
+
+  <footer>
+    <p>© 2025 Pikamink • Made with love & neon sparkles</p>
+  </footer>
+
+  <script>
+    function showMessage() {
+      alert("Email us at hello@pikamink.com or DM us on Instagram @pikamink.studio!");
+    }
+  </script>
+</body>
+</html>
