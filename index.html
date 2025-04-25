@@ -1,85 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Pikamink</title>
+  <meta charset="UTF-8">
+  <title>Pikamink Fairyland</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       margin: 0;
-      font-family: 'Comic Sans MS', cursive;
-      background: linear-gradient(to right, #ff69b4, #ffa500, #c77dff);
-      color: white;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom, #0b0f19, #1a1f2b);
+      color: #fff;
       text-align: center;
     }
 
     header {
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.2);
+      padding: 40px 20px;
     }
 
-    .hero {
+    .logo {
+      width: 120px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #ffc0ff;
+      text-shadow: 0 0 15px #ff7ce5;
+    }
+
+    #game-section {
       padding: 40px;
     }
 
-    .mascot {
-      width: 200px;
-      border-radius: 50%;
-      box-shadow: 0 0 20px white;
-      margin: 20px 0;
-    }
-
-    button {
-      background-color: white;
-      color: #ff69b4;
-      border: none;
-      padding: 10px 20px;
-      font-weight: bold;
+    #game {
+      background: #151a28;
       border-radius: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #ffd1dc;
-    }
-
-    .about {
-      padding: 30px;
-      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 25px #ff66cc;
+      margin-top: 20px;
     }
 
     footer {
-      padding: 10px;
-      font-size: 14px;
+      padding: 20px;
+      color: #aaa;
+      font-size: 0.9em;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Pikamink</h1>
-    <p>Whimsical game design & branding studio</p>
+    <img src="pikamink_only_transparent.png" alt="Pikamink Logo" class="logo">
+    <h1>Welcome to Pikamink Studio</h1>
+    <p>Explore magical games and glowing mushrooms!</p>
   </header>
 
-  <section class="hero">
-    <img src="pikamink_only_transparent.PNG" alt="Pikamink Mascot" class="mascot" />
-    <h2>Game Design ✨ Cute Branding 🍄 Digital Magic</h2>
-    <button onclick="showMessage()">Get in Touch</button>
-  </section>
-
-  <section class="about">
-    <h3>About Us</h3>
-    <p>Pikamink brings fantasy to life through adorable game assets, digital art, and magical branding.</p>
+  <section id="game-section">
+    <h2 style="color: #b0faff; text-shadow: 0 0 10px #5effe4;">🍄 Magical Mushroom Hunt Game 🍄</h2>
+    <canvas id="game" width="400" height="400"></canvas>
   </section>
 
   <footer>
-    <p>© 2025 Pikamink • Made with love & neon sparkles</p>
+    © 2025 Pikamink. All rights reserved.
   </footer>
 
   <script>
-    function showMessage() {
-      alert("Email us at hello@pikamink.com or DM us on Instagram @pikamink.studio!");
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+
+  const grid = 20;
+  let snake = [{ x: 160, y: 160 }];
+  let dx = grid;
+  let dy = 0;
+  let mushroom = { x: 320, y: 320 };
+  let mushroomImg = new Image();
+  mushroomImg.src = "pikamink_only_transparent.png";
+
+  function getRandomPosition() {
+    return Math.floor(Math.random() * 20) * grid;
+  }
+
+  function updateGame() {
+    const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+    snake.unshift(head);
+
+    if (head.x === mushroom.x && head.y === mushroom.y) {
+      mushroom.x = getRandomPosition();
+      mushroom.y = getRandomPosition();
+    } else {
+      snake.pop();
     }
-  </script>
+
+    // Collision detection
+    if (
+      head.x < 0 || head.x >= canvas.width ||
+      head.y < 0 || head.y >= canvas.height ||
+      snake.slice(1).some(s => s.x === head.x && s.y === head.y)
+    ) {
+      snake = [{ x: 160, y: 160 }];
+      dx = grid;
+      dy = 0;
+      mushroom = { x: getRandomPosition(), y: getRandomPosition() };
+    }
+
+    // Draw
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#ffffffaa";
+    snake.forEach(part => {
+      ctx.beginPath();
+      ctx.arc(part.x + grid / 2, part.y + grid / 2, grid / 2 - 2, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.drawImage(mushroomImg, mushroom.x, mushroom.y, grid, grid);
+  }
+
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft" && dx === 0) { dx = -grid; dy = 0; }
+    else if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -grid; }
+    else if (e.key === "ArrowRight" && dx === 0) { dx = grid; dy = 0; }
+    else if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = grid; }
+  });
+
+  mushroomImg.onload = () => {
+    // 🐌 Slow down the game: run update every 150ms
+    setInterval(updateGame, 150);
+  };
+</script>
+
 </body>
 </html>
+
