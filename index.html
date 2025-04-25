@@ -131,11 +131,68 @@
     .close:hover {
       color: #ff7ce5;
     }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      header {
+        padding: 20px 10px;
+      }
+
+      .logo {
+        width: 100px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      #game {
+        width: 100%;
+        height: 300px;
+        max-width: 100%;
+      }
+
+      .flower-button {
+        font-size: 1em;
+        padding: 10px 20px;
+      }
+
+      .social-links a {
+        font-size: 1.2em;
+      }
+
+      footer {
+        font-size: 0.8em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .flower-button {
+        font-size: 0.9em;
+        padding: 8px 18px;
+      }
+
+      .social-links a {
+        font-size: 1.1em;
+      }
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      #game {
+        height: 250px;
+      }
+
+      footer {
+        font-size: 0.7em;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
-    <img src="pikamink_only_transparent.PNG" alt="Pikamink Logo" class="logo">
+    <img src="pikamink_only_transparent.png" alt="Pikamink Logo" class="logo">
     <h1>Welcome to Pikamink Studios</h1>
     <p>Explore magical games and glowing mushrooms!</p>
   </header>
@@ -152,7 +209,7 @@
   </div>
 
   <div class="social-links" style="text-align: center; margin-top: 30px;">
-    <a href="https://instagram.com/pikamink" target="_blank">Instagram</a>
+    <a href="https://www.instagram.com/pikamink_?igsh=MWY0cGZzanVkeGwyMw==" target="_blank">Instagram</a>
     <a href="https://facebook.com/pikamink" target="_blank">Facebook</a>
   </div>
 
@@ -195,7 +252,7 @@
         <span class="close" id="closeContact">&times;</span>
       </div>
       <p>If you have any questions or want to collaborate, feel free to reach out!</p>
-      <p>Email: <a href="mailto:pikaminkza@gmail.com" style="color: #ff66cc;">pikaminkza@gmail.com</a></p>
+      <p>Email: <a href="mailto:contact@pikamink.com" style="color: #ff66cc;">contact@pikamink.com</a></p>
     </div>
   </div>
 
@@ -236,7 +293,7 @@
     let dy = 0;
     let mushroom = { x: 320, y: 320 };
     let mushroomImg = new Image();
-    mushroomImg.src = "pikamink_only_transparent.PNG";
+    mushroomImg.src = "pikamink_only_transparent.png";
 
     function getRandomPosition() {
       return Math.floor(Math.random() * 20) * grid;
@@ -292,5 +349,4 @@
 
 </body>
 </html>
-
 
