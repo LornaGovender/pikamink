@@ -223,15 +223,19 @@
       }
 
       // Wall or self collision
-      if (
-        head.x < 0 || head.x >= canvas.width ||
-        head.y < 0 || head.y >= canvas.height ||
-        snake.slice(1).some(s => s.x === head.x && s.y === head.y)
-      ) {
-        snake = [{ x: 160, y: 160 }];
-        dx = grid;
-        dy = 0;
-      }
+     // Wrap around instead of dying on wall collision
+if (head.x < 0) head.x = canvas.width - grid;
+else if (head.x >= canvas.width) head.x = 0;
+if (head.y < 0) head.y = canvas.height - grid;
+else if (head.y >= canvas.height) head.y = 0;
+
+// Self-collision resets game
+if (snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
+  snake = [{ x: 160, y: 160 }];
+  dx = grid;
+  dy = 0;
+}
+
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
