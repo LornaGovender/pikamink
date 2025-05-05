@@ -52,15 +52,6 @@
       font-size: 0.9em;
     }
 
-    .section {
-      padding: 40px;
-      background: #1a1f2b;
-      margin: 20px 0;
-      border-radius: 20px;
-      box-shadow: 0 0 15px #ff66cc;
-      display: none;
-    }
-
     .flower-button {
       background: #ff66cc;
       color: #fff;
@@ -79,10 +70,6 @@
       box-shadow: 0 0 20px #ff7ce5;
     }
 
-    .flower-button:active {
-      transform: scale(1);
-    }
-
     .social-links a {
       text-decoration: none;
       color: #fff;
@@ -96,7 +83,6 @@
       color: #ff7ce5;
     }
 
-    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
@@ -116,6 +102,7 @@
       box-shadow: 0 0 25px #ff66cc;
       color: #fff;
       text-align: center;
+      max-width: 90%;
     }
 
     .modal-header h2 {
@@ -133,61 +120,16 @@
       color: #ff7ce5;
     }
 
-    /* Responsive Styles */
     @media (max-width: 768px) {
-      header {
-        padding: 20px 10px;
-      }
-
-      .logo {
-        width: 100px;
-      }
-
-      h1 {
-        font-size: 2em;
-      }
-
-      #game {
-        width: 100%;
-        height: 300px;
-        max-width: 100%;
-      }
-
-      .flower-button {
-        font-size: 1em;
-        padding: 10px 20px;
-      }
-
-      .social-links a {
-        font-size: 1.2em;
-      }
-
-      footer {
-        font-size: 0.8em;
-      }
+      .logo { width: 100px; }
+      h1 { font-size: 2em; }
+      #game { width: 100%; height: 300px; }
     }
 
     @media (max-width: 480px) {
-      .flower-button {
-        font-size: 0.9em;
-        padding: 8px 18px;
-      }
-
-      .social-links a {
-        font-size: 1.1em;
-      }
-
-      h1 {
-        font-size: 1.8em;
-      }
-
-      #game {
-        height: 250px;
-      }
-
-      footer {
-        font-size: 0.7em;
-      }
+      .flower-button { font-size: 0.9em; padding: 8px 18px; }
+      h1 { font-size: 1.8em; }
+      #game { height: 250px; }
     }
   </style>
 </head>
@@ -203,40 +145,37 @@
     <canvas id="game" width="400" height="400"></canvas>
   </section>
 
-  <div style="text-align: center;">
+  <div>
     <button class="flower-button" id="aboutBtn">About Us 🌸</button>
     <button class="flower-button" id="offerBtn">What We Offer 🌼</button>
     <button class="flower-button" id="contactBtn">Contact Us 🌺</button>
   </div>
 
-  <div class="social-links" style="text-align: center; margin-top: 30px;">
+  <div class="social-links" style="margin-top: 30px;">
     <a href="https://www.instagram.com/pikamink_?igsh=MWY0cGZzanVkeGwyMw==" target="_blank">Instagram</a>
     <a href="https://facebook.com/pikamink" target="_blank">Facebook</a>
   </div>
 
-  <footer>
-    © 2025 Pikamink. All rights reserved.
-  </footer>
+  <footer>© 2025 Pikamink. All rights reserved.</footer>
 
-  <!-- Modal for About Us -->
+  <!-- Modals -->
   <div id="aboutModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h2>About Pikamink Studios</h2>
         <span class="close" id="closeAbout">&times;</span>
       </div>
-      <p>Pikamink Studios is a creative hub where magic meets technology! We create fun, interactive games, educational content, and much more. Our mission is to bring joy through innovation, and we are dedicated to creating experiences that inspire imagination and curiosity.</p>
+      <p>Pikamink Studios is a creative hub where magic meets technology! We create fun, interactive games, educational content, and much more. Our mission is to bring joy through innovation and inspire imagination and curiosity.</p>
     </div>
   </div>
 
-  <!-- Modal for What We Offer -->
   <div id="offerModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h2>What We Offer</h2>
         <span class="close" id="closeOffer">&times;</span>
       </div>
-      <ul>
+      <ul style="text-align: left;">
         <li>Magical Games for All Ages</li>
         <li>Educational Content for Kids</li>
         <li>Interactive Storytelling and Design</li>
@@ -246,7 +185,6 @@
     </div>
   </div>
 
-  <!-- Modal for Contact Us -->
   <div id="contactModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -259,14 +197,73 @@
   </div>
 
   <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const grid = 20;
+    let snake = [{ x: 160, y: 160 }];
+    let dx = grid;
+    let dy = 0;
+    let mushroom = {
+      x: Math.floor(Math.random() * 20) * grid,
+      y: Math.floor(Math.random() * 20) * grid
+    };
+    const mushroomImg = new Image();
+    mushroomImg.src = "pikamink_only_transparent.PNG";
+
+    function gameLoop() {
+      const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+      snake.unshift(head);
+
+      // Eat mushroom
+      if (head.x === mushroom.x && head.y === mushroom.y) {
+        mushroom.x = Math.floor(Math.random() * 20) * grid;
+        mushroom.y = Math.floor(Math.random() * 20) * grid;
+      } else {
+        snake.pop();
+      }
+
+      // Wall or self collision
+      if (
+        head.x < 0 || head.x >= canvas.width ||
+        head.y < 0 || head.y >= canvas.height ||
+        snake.slice(1).some(s => s.x === head.x && s.y === head.y)
+      ) {
+        snake = [{ x: 160, y: 160 }];
+        dx = grid;
+        dy = 0;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw mushroom
+      ctx.drawImage(mushroomImg, mushroom.x, mushroom.y, grid, grid);
+
+      // Draw snake
+      ctx.fillStyle = "#ff66cc";
+      snake.forEach(part => ctx.fillRect(part.x, part.y, grid, grid));
+    }
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft" && dx === 0) {
+        dx = -grid; dy = 0;
+      } else if (e.key === "ArrowUp" && dy === 0) {
+        dx = 0; dy = -grid;
+      } else if (e.key === "ArrowRight" && dx === 0) {
+        dx = grid; dy = 0;
+      } else if (e.key === "ArrowDown" && dy === 0) {
+        dx = 0; dy = grid;
+      }
+    });
+
+    setInterval(gameLoop, 120);
+
+    // Modal logic
     const aboutBtn = document.getElementById("aboutBtn");
     const offerBtn = document.getElementById("offerBtn");
     const contactBtn = document.getElementById("contactBtn");
-
     const aboutModal = document.getElementById("aboutModal");
     const offerModal = document.getElementById("offerModal");
     const contactModal = document.getElementById("contactModal");
-
     const closeAbout = document.getElementById("closeAbout");
     const closeOffer = document.getElementById("closeOffer");
     const closeContact = document.getElementById("closeContact");
@@ -279,97 +276,12 @@
     closeOffer.onclick = () => offerModal.style.display = "none";
     closeContact.onclick = () => contactModal.style.display = "none";
 
-    window.onclick = (event) => {
-      if (event.target === aboutModal) aboutModal.style.display = "none";
-      if (event.target === offerModal) offerModal.style.display = "none";
-      if (event.target === contactModal) contactModal.style.display = "none";
+    window.onclick = (e) => {
+      if (e.target === aboutModal) aboutModal.style.display = "none";
+      if (e.target === offerModal) offerModal.style.display = "none";
+      if (e.target === contactModal) contactModal.style.display = "none";
     };
-
-    // Game logic (same as before)
-    const canvas = document.getElementById("game");
-    const ctx = canvas.getContext("2d");
-
-    const grid = 20;
-    let snake = [{ x: 160, y: 160 }];
-    let dx = grid;
-    let dy = 0;
-    let mushroom = { x: 520, y: 520 };
-    let mushroomImg = new Image();
-    mushroomImg.src = "pikamink_only_transparent.PNG";
-
-    function getRandomPosition() {
-      return Math.floor(Math.random() * 20) * grid;
-    }
-
-    function updateGame() {
-      const head = { x: snake[0].x + dx, y: snake[0].y + dy };
-      snake.unshift(head);
-
-      if (head.x === mushroom.x && head.y === mushroom.y) {
-        mushroom.x = getRandomPosition();
-        mushroom.y = getRandomPosition();
-      } else {
-        snake.pop();
-      }
-
-      // Collision detection
-      if (
-        head.x < 0 || head.x >= canvas.width ||
-        head.y < 0 || head.y >= canvas.height ||
-        snake.slice(1).some(s => s.x === head.x && s.y === head.y)
-      ) {
-        snake = [{ x: 160, y: 160 }];
-                dx = grid;
-        dy = 0;
-      }
-
-      draw();
-    }
-
-    function draw() {
-      ctx.fillStyle = "#151a28";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Draw mushroom image
-      ctx.drawImage(mushroomImg, mushroom.x, mushroom.y, grid, grid);
-
-      // Draw snake
-      ctx.fillStyle = "#ff66cc";
-      snake.forEach(part => {
-        ctx.fillRect(part.x, part.y, grid - 2, grid - 2);
-      });
-    }
-
-    document.addEventListener("keydown", (e) => {
-      switch (e.key) {
-        case "ArrowLeft":
-          if (dx === 0) {
-            dx = -grid;
-            dy = 0;
-          }
-          break;
-        case "ArrowUp":
-          if (dy === 0) {
-            dx = 0;
-            dy = -grid;
-          }
-          break;
-        case "ArrowRight":
-          if (dx === 0) {
-            dx = grid;
-            dy = 0;
-          }
-          break;
-        case "ArrowDown":
-          if (dy === 0) {
-            dx = 0;
-            dy = grid;
-          }
-          break;
-      }
-    });
-
-    setInterval(updateGame, 150);
   </script>
 </body>
 </html>
+
