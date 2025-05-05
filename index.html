@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <head>
   <meta charset="UTF-8">
   <title>Pikamink Studios</title>
   <link rel="icon" type="image/png" href="pikamink_only_transparent.PNG">
@@ -212,6 +211,10 @@
     const mushroomImg = new Image();
     mushroomImg.src = "pikamink_only_transparent.PNG";
 
+    // Adjust speed for mobile devices
+    const isMobile = window.innerWidth <= 768;
+    const gameSpeed = isMobile ? 200 : 120;
+
     function gameLoop() {
       const head = { x: snake[0].x + dx, y: snake[0].y + dy };
       snake.unshift(head);
@@ -225,19 +228,17 @@
       }
 
       // Wall or self collision
-     // Wrap around instead of dying on wall collision
-if (head.x < 0) head.x = canvas.width - grid;
-else if (head.x >= canvas.width) head.x = 0;
-if (head.y < 0) head.y = canvas.height - grid;
-else if (head.y >= canvas.height) head.y = 0;
+      if (head.x < 0) head.x = canvas.width - grid;
+      else if (head.x >= canvas.width) head.x = 0;
+      if (head.y < 0) head.y = canvas.height - grid;
+      else if (head.y >= canvas.height) head.y = 0;
 
-// Self-collision resets game
-if (snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
-  snake = [{ x: 160, y: 160 }];
-  dx = grid;
-  dy = 0;
-}
-
+      // Self-collision resets game
+      if (snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
+        snake = [{ x: 160, y: 160 }];
+        dx = grid;
+        dy = 0;
+      }
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -261,7 +262,38 @@ if (snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
       }
     });
 
-    setInterval(gameLoop, 120);
+    // Touch controls for mobile
+    let startX, startY;
+    canvas.addEventListener("touchstart", (e) => {
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      const diffX = touch.clientX - startX;
+      const diffY = touch.clientY - startY;
+
+      if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0 && dx === 0) {
+          dx = grid; dy = 0;
+        } else if (diffX < 0 && dx === 0) {
+          dx = -grid; dy = 0;
+        }
+      } else {
+        if (diffY > 0 && dy === 0) {
+          dx = 0; dy = grid;
+        } else if (diffY < 0 && dy === 0) {
+          dx = 0; dy = -grid;
+        }
+      }
+
+      startX = touch.clientX;
+      startY = touch.clientY;
+    });
+
+    setInterval(gameLoop, gameSpeed);
 
     // Modal logic
     const aboutBtn = document.getElementById("aboutBtn");
@@ -281,12 +313,6 @@ if (snake.slice(1).some(s => s.x === head.x && s.y === head.y)) {
     closeAbout.onclick = () => aboutModal.style.display = "none";
     closeOffer.onclick = () => offerModal.style.display = "none";
     closeContact.onclick = () => contactModal.style.display = "none";
-
-    window.onclick = (e) => {
-      if (e.target === aboutModal) aboutModal.style.display = "none";
-      if (e.target === offerModal) offerModal.style.display = "none";
-      if (e.target === contactModal) contactModal.style.display = "none";
-    };
   </script>
 </body>
 </html>
