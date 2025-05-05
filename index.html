@@ -319,60 +319,57 @@
         snake.slice(1).some(s => s.x === head.x && s.y === head.y)
       ) {
         snake = [{ x: 160, y: 160 }];
-        dx = grid;
+                dx = grid;
         dy = 0;
-        mushroom = { x: getRandomPosition(), y: getRandomPosition() };
       }
 
-      // Draw
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#ffffffaa";
-      snake.forEach(part => {
-        ctx.beginPath();
-        ctx.arc(part.x + grid / 2, part.y + grid / 2, grid / 2 - 2, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      ctx.drawImage(mushroomImg, mushroom.x, mushroom.y, grid, grid);
+      draw();
     }
 
-    document.addEventListener("keydown", e => {
-      if (e.key === "ArrowLeft" && dx === 0) { dx = -grid; dy = 0; }
-      else if (e.key === "ArrowUp" && dy === 0) { dx = 0; dy = -grid; }
-      else if (e.key === "ArrowRight" && dx === 0) { dx = grid; dy = 0; }
-      else if (e.key === "ArrowDown" && dy === 0) { dx = 0; dy = grid; }
-    });
+    function draw() {
+      ctx.fillStyle = "#151a28";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Touch control for mobile devices
-    let touchStartX = 0;
-    let touchStartY = 0;
+      // Draw mushroom image
+      ctx.drawImage(mushroomImg, mushroom.x, mushroom.y, grid, grid);
 
-    canvas.addEventListener("touchstart", (e) => {
-      const touch = e.touches[0];
-      touchStartX = touch.clientX;
-      touchStartY = touch.clientY;
-    });
+      // Draw snake
+      ctx.fillStyle = "#ff66cc";
+      snake.forEach(part => {
+        ctx.fillRect(part.x, part.y, grid - 2, grid - 2);
+      });
+    }
 
-    canvas.addEventListener("touchmove", (e) => {
-      const touch = e.touches[0];
-      const deltaX = touch.clientX - touchStartX;
-      const deltaY = touch.clientY - touchStartY;
-
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        if (deltaX > 0 && dx === 0) { dx = grid; dy = 0; }
-        else if (deltaX < 0 && dx === 0) { dx = -grid; dy = 0; }
-      } else {
-        if (deltaY > 0 && dy === 0) { dx = 0; dy = grid; }
-        else if (deltaY < 0 && dy === 0) { dx = 0; dy = -grid; }
+    document.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "ArrowLeft":
+          if (dx === 0) {
+            dx = -grid;
+            dy = 0;
+          }
+          break;
+        case "ArrowUp":
+          if (dy === 0) {
+            dx = 0;
+            dy = -grid;
+          }
+          break;
+        case "ArrowRight":
+          if (dx === 0) {
+            dx = grid;
+            dy = 0;
+          }
+          break;
+        case "ArrowDown":
+          if (dy === 0) {
+            dx = 0;
+            dy = grid;
+          }
+          break;
       }
-
-      touchStartX = touch.clientX;
-      touchStartY = touch.clientY;
     });
 
-    setInterval(updateGame, 100);
+    setInterval(updateGame, 150);
   </script>
 </body>
 </html>
-
-
